@@ -3,7 +3,7 @@ This my implementation of the first android app of the Google Applied CS with An
 It has support of multi-thread processing for multi-core processors.
 This app uses Maps to store and retrieve anagrams.
 
-The app has the following logic:
+This app has the following logic:
 
 1, Most actions take place in this step. The user click the button to initialize the game. A pool of threads is initialized to run tasks. The constructor of the AnagramDictionary read in the word list into containers for different purposes in the program: a set (S) for verifying word membership of a user provided word with the dictionary, a map (M1) of lists keyed using word length for efficient retrieval of potential words to check in the getAnagram function, and a map (M2) of lists also keyed using word length for the pool of words to start with. Then a word (W) with the DEFAULT_WORD_LENGTH is chosen to start. This word plus one additional letter must have at least 5 anagrams. The initial word is chosen iteratively until the condition is met, and the word that doesn't meet this condition is removed from the pool (M2). The list of anagrams for each candidate word (W plus one additional letter from the English alphabet) were recorded in the map (M1), and the result for all the condidate words is stored in a list. Additionaly, the program checks if each anagram in the list is legal.
 
