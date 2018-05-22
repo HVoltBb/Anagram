@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -55,9 +56,11 @@ public class AnagramsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         AssetManager assetManager = getAssets();
         try {
+            InputStream inK = assetManager.open("keyset.obj");
+            InputStream inV = assetManager.open("valueset.obj");
             InputStream inputStream = assetManager.open("words.txt");
-            dictionary = new AnagramDictionary(new InputStreamReader(inputStream));
-        } catch (IOException e) {
+            dictionary = new AnagramDictionary(new InputStreamReader(inputStream), inK, inV);
+        } catch (Exception e) {
             Toast toast = Toast.makeText(this, "Could not load dictionary", Toast.LENGTH_LONG);
             toast.show();
         }

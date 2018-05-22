@@ -15,9 +15,15 @@
 
 package com.google.engedu.anagrams;
 
+import android.graphics.Path;
+
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,13 +44,35 @@ public class AnagramDictionary {
     private Set<String> wordList1 = new HashSet<>();
     private Map<Integer, List<String>> sizeToWords = new HashMap<>();
     private Map<Integer, List<String>> pool = new HashMap<>();
-    private Map<String, Set<String>> lettersToWord = new HashMap<>();
+    private Map<String, List<String>> lettersToWord = new HashMap<>();
     private int[] index = new int[MAX_WORD_LENGTH];
     private ExecutorService es = Executors.newCachedThreadPool();
     private static final Object lock = new Object();
     private List<String> cache = new ArrayList<>();
 
-    public AnagramDictionary(Reader reader) throws IOException {
+    Map<Integer, List<String>> getsizeToWords(){
+        return sizeToWords;
+    }
+
+    Map<String, List<String>> getLettersToWord(){
+        return lettersToWord;
+    }
+
+    public  AnagramDictionary(Reader reader, InputStream inK, InputStream inV) throws IOException {
+        Map<String, List<String>> x = new HashMap<>();
+        try {
+            ObjectInputStream readerK = new ObjectInputStream(inK);
+            ObjectInputStream readerV = new ObjectInputStream(inV);
+
+            String k;
+            List<String> V;
+            while((k = (String) readerK.readObject())!=null && (V = (ArrayList<String>) readerV.readObject())!=null){
+                x.put(k, V);
+            }
+        } catch (Exception es){}
+
+        lettersToWord.putAll(x);
+
         BufferedReader in = new BufferedReader(reader);
         String line;
         for (int i = 1; i < MAX_WORD_LENGTH + 2; ++i) {
@@ -55,11 +83,13 @@ public class AnagramDictionary {
             String word = line.trim();
             wordList1.add(word);
         }
+
         for (String word : wordList1) {
-            if (word.length() <= MAX_WORD_LENGTH + 1)
+            if (word.length() <= MAX_WORD_LENGTH + 1) {
                 sizeToWords.get(word.length()).add(word);
             }
-            pool.putAll(sizeToWords);
+        }
+        pool.putAll(sizeToWords);
     }
 
     public boolean isGoodWord(String word, String base) {
@@ -68,10 +98,11 @@ public class AnagramDictionary {
 
     public List<String> getAnagrams(String targetWord) {
         String targetWords = sortLetters(targetWord);
+        /*
         if(lettersToWord.get(targetWords)==null) {
             String compareTowd;
             int tlen = targetWords.length();
-            Set<String> tmp = new HashSet<>();
+            List<String> tmp = new ArrayList<>();
             Iterator<String> it = sizeToWords.get(tlen).iterator();
             while(it.hasNext()){
                 String word = it.next();
@@ -83,7 +114,8 @@ public class AnagramDictionary {
             }
             lettersToWord.put(targetWords, tmp);
         }
-        return new ArrayList<>(lettersToWord.get(targetWords));
+        */
+        return lettersToWord.get(targetWords);
     }
 
     private static String sortLetters(String x){
@@ -123,7 +155,7 @@ public class AnagramDictionary {
                 synchronized (lock) {
                     cache.addAll(tmp);
                 }
-            return null;
+            return 0;
         }
     }
 
@@ -135,7 +167,7 @@ public class AnagramDictionary {
             cache.clear();
             List<String> tmp = getAnagramsWithOneMoreLetter(ans);
             if(tmp.size()<MIN_NUM_ANAGRAMS){
-                pool.get(wordLength).remove(ans);
+                //pool.get(wordLength).remove(ans);
                 flag = true;
             } else
                 flag = false;
