@@ -3,8 +3,10 @@ This version utilizes a set of preprocessed key and value pairs of words with le
 
 In this version of the app, most of the computation in constructing the anagram has been relegated. Now, the most computational intensive step is the one to look up the hashmap with 26 candidate words, and it will not significantly slow down the app because these operations are very efficient.
 
+5/22/2018
+
 # Anagram 0.1
-This my implementation of the first android app of the Google Applied CS with Android course.
+This my implementation of the first android app of the [Google Applied CS with Android][1] course.
 It has support of multi-thread processing for multi-core processors.
 This app uses Maps to store and retrieve anagrams.
 
@@ -25,3 +27,5 @@ The performance of the app should improve as the user play through more and more
 This is my first app. I hope this post can help others on this path.
 
 5/21/2018
+
+[1]: https://appliedcsskills.withgoogle.com/ "Applied CS Skills"
