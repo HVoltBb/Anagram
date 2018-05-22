@@ -1,4 +1,9 @@
-# Anagram
+# Anagram 0.2
+This version utilizes a set of preprocessed key and value pairs of words with length from 4 to 8. This range is used to cover the range of potential anagrams needed in the app. The key and value pairs are stored seperately in the assets folder. The app load these files on start. The preprocessing step is accomplished using the PreProcess program. 
+
+In this version of the app, most of the computation in constructing the anagram has been avoided. Now, the most computational intensive step is the one to look up the hashmap with 26 candidate words, and it will not significantly slow down the app because these operations are very efficient.
+
+# Anagram 0.1
 This my implementation of the first android app of the Google Applied CS with Android course.
 It has support of multi-thread processing for multi-core processors.
 This app uses Maps to store and retrieve anagrams.
